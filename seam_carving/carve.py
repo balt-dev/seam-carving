@@ -2,7 +2,6 @@ import warnings
 from enum import Enum
 from typing import Optional, Tuple
 
-import numba as nb
 import numpy as np
 from scipy.ndimage import sobel
 
@@ -58,7 +57,6 @@ def _get_energy(gray: np.ndarray) -> np.ndarray:
     return energy
 
 
-@nb.njit(nb.int32[:](nb.float32[:, :]), cache=True)
 def _get_backward_seam(energy: np.ndarray) -> np.ndarray:
     """Compute the minimum vertical seam from the backward energy map"""
     h, w = energy.shape
@@ -119,13 +117,6 @@ def _get_backward_seams(
     return seams
 
 
-@nb.njit(
-    [
-        nb.int32[:](nb.float32[:, :], nb.none),
-        nb.int32[:](nb.float32[:, :], nb.float32[:, :]),
-    ],
-    cache=True,
-)
 def _get_forward_seam(gray: np.ndarray, aux_energy: Optional[np.ndarray]) -> np.ndarray:
     """Compute the minimum vertical seam using forward energy"""
     h, w = gray.shape
@@ -232,9 +223,6 @@ def _reduce_width(
     return dst, aux_energy
 
 
-@nb.njit(
-    nb.float32[:, :, :](nb.float32[:, :, :], nb.boolean[:, :], nb.int32), cache=True
-)
 def _insert_seams_kernel(
     src: np.ndarray, seams: np.ndarray, delta_width: int
 ) -> np.ndarray:
