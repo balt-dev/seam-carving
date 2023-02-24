@@ -40,8 +40,7 @@ setuptools.setup(
     python_requires=">=3.7",
     install_requires=[
         "numpy",
-        "scipy",
-        "numba>=0.56.0",
+        "scipy"
     ],
     extras_require={
         "dev": [
